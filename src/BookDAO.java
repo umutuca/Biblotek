@@ -11,7 +11,7 @@ public class BookDAO {
             stmt.setString(1, title);
             stmt.setString(2, author);
             stmt.executeUpdate();
-        }
+        }   
     }
 
     public void deleteBook(int bookId) throws SQLException {
