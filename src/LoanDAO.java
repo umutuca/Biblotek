@@ -30,8 +30,8 @@ public class LoanDAO {
         List<Loan> loans = new ArrayList<>();
         String sql = "SELECT loans.*, books.title, books.author " +
                 "FROM loans " +
-                "JOIN books ON loans.book_id = books.id " +  // Mellanslag efter JOIN-satsen
-                "WHERE loans.user_name = ? AND return_date IS NULL"; // Lägg till loans. för tydlighet
+                "JOIN books ON loans.book_id = books.id " +
+                "WHERE loans.user_name = ? AND return_date IS NULL";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, userName);
@@ -43,8 +43,8 @@ public class LoanDAO {
                         rs.getInt("book_id"),
                         rs.getDate("loan_date").toLocalDate(),
                         null,
-                        rs.getString("author"), // Nytt
-                        rs.getString("title") // Nytt
+                        rs.getString("author"),
+                        rs.getString("title")
                 ));
             }
         }
@@ -53,9 +53,10 @@ public class LoanDAO {
 
     public List<Loan> getAllActiveLoans() throws SQLException {
         List<Loan> loans = new ArrayList<>();
-        String sql = "SELECT loans.*, books.title, books.author " +
+        String sql = "SELECT loans.*, books.title, books.author, users.username " +
                 "FROM loans " +
                 "JOIN books ON loans.book_id = books.id " +
+                "JOIN users ON loans.user_name = users.username " +
                 "WHERE return_date IS NULL";
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -64,12 +65,12 @@ public class LoanDAO {
             while (rs.next()) {
                 loans.add(new Loan(
                         rs.getInt("id"),
-                        rs.getString("user_name"),
+                        rs.getString("username"),
                         rs.getInt("book_id"),
-                        rs.getDate("loan_date").toLocalDate(),null ,
-                        rs.getString("author"), // Nytt
-                        rs.getString("title") // Nytt
-
+                        rs.getDate("loan_date").toLocalDate(),
+                        null,
+                        rs.getString("author"),
+                        rs.getString("title")
                 ));
             }
         }

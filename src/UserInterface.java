@@ -20,6 +20,8 @@ public class UserInterface {
             System.out.println("2. Återlämna bok");
             System.out.println("3. Visa mina lån");
             System.out.println("4. Visa alla böcker");
+            System.out.println("5. Sök på författare");
+            System.out.println("6. Sök på kategorier");
             System.out.println("0. Logga ut");
             System.out.print("Val: ");
 
@@ -38,6 +40,12 @@ public class UserInterface {
                     break;
                 case 4:
                     listAllBooks();
+                    break;
+                case 5:
+                    searchBooksByAuthor();
+                    break;
+                case 6:
+                    searchBooksByCategory();
                     break;
                 case 0:
                     return;
@@ -92,7 +100,6 @@ public class UserInterface {
             int loanId = scanner.nextInt();
             scanner.nextLine();
 
-            // Kontrollera om låne-ID finns i listan
             Loan selectedLoan = null;
             for (Loan loan : loans) {
                 if (loan.getId() == loanId) {
@@ -102,23 +109,17 @@ public class UserInterface {
             }
 
             if (selectedLoan == null) {
-                // Om låne-ID inte hittas, visa ett felmeddelande
                 System.out.println("Felaktigt låne-ID, försök igen.");
                 return;
             }
 
-            // Om låne-ID är korrekt, fortsätt med återlämning
             loanDAO.returnLoan(loanId);
-
-            // Uppdatera bokens tillgänglighet i databasen
             bookDAO.updateAvailability(selectedLoan.getBookId(), true);
-
             System.out.println("Boken är nu återlämnad!");
         } catch (SQLException e) {
             System.out.println("Databasfel: " + e.getMessage());
         }
     }
-
 
     private void showUserLoans(String userName) {
         try {
@@ -133,7 +134,7 @@ public class UserInterface {
                 System.out.println("Lånad: " + loan.getLoanDate() +
                         ", Bok-ID: " + loan.getBookId() +
                         ", Författare: " + loan.getBookAuthor() +
-                        ", Bok-titel:" + loan.getBookTitle());
+                        ", Bok-titel: " + loan.getBookTitle());
             }
         } catch (SQLException e) {
             System.out.println("Databasfel: " + e.getMessage());
@@ -144,6 +145,50 @@ public class UserInterface {
         try {
             List<Book> books = bookDAO.getAllBooks();
             System.out.println("\nAlla böcker:");
+            for (Book book : books) {
+                System.out.println(book.getId() + ": " + book.getTitle() +
+                        " av " + book.getAuthor() +
+                        " - " + (book.isAvailable() ? "Tillgänglig" : "Utlånad"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Databasfel: " + e.getMessage());
+        }
+    }
+
+    private void searchBooksByAuthor() {
+        System.out.print("Ange författare att söka efter: ");
+        String author = scanner.nextLine();
+
+        try {
+            List<Book> books = bookDAO.searchBooksByAuthor(author);
+            if (books.isEmpty()) {
+                System.out.println("Inga böcker hittades!");
+                return;
+            }
+
+            System.out.println("\nSökresultat:");
+            for (Book book : books) {
+                System.out.println(book.getId() + ": " + book.getTitle() +
+                        " av " + book.getAuthor() +
+                        " - " + (book.isAvailable() ? "Tillgänglig" : "Utlånad"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Databasfel: " + e.getMessage());
+        }
+    }
+
+    private void searchBooksByCategory() {
+        System.out.print("Ange kategori att söka efter: ");
+        String category = scanner.nextLine();
+
+        try {
+            List<Book> books = bookDAO.searchBooksByCategory(category);
+            if (books.isEmpty()) {
+                System.out.println("Inga böcker hittades!");
+                return;
+            }
+
+            System.out.println("\nSökresultat:");
             for (Book book : books) {
                 System.out.println(book.getId() + ": " + book.getTitle() +
                         " av " + book.getAuthor() +
