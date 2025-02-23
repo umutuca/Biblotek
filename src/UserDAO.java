@@ -10,7 +10,7 @@ public class UserDAO {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, userName);
             stmt.setString(2, email);
-            stmt.setString(3, password); // Helst ska lösenordet hashas
+            stmt.setString(3, password);
             stmt.setBoolean(4, isAdmin);
             stmt.executeUpdate();
         }
@@ -21,7 +21,7 @@ public class UserDAO {
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, userName);
-            stmt.setString(2, password); // Helst ska lösenordet hashas och jämföras
+            stmt.setString(2, password);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 return new User(
