@@ -28,10 +28,13 @@ public class LoanDAO {
 
     public List<Loan> getLoansByUser(String userName) throws SQLException {
         List<Loan> loans = new ArrayList<>();
-        String sql = "SELECT loans.*, books.title, books.author " +
+        String sql = "SELECT loans.*, books.title, books.author, GROUP_CONCAT(categories.name SEPARATOR ', ') AS categories " +
                 "FROM loans " +
                 "JOIN books ON loans.book_id = books.id " +
-                "WHERE loans.user_name = ? AND return_date IS NULL";
+                "LEFT JOIN book_categories ON books.id = book_categories.book_id " +
+                "LEFT JOIN categories ON book_categories.category_id = categories.id " +
+                "WHERE loans.user_name = ? AND return_date IS NULL " +
+                "GROUP BY loans.id";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, userName);
@@ -44,7 +47,8 @@ public class LoanDAO {
                         rs.getDate("loan_date").toLocalDate(),
                         null,
                         rs.getString("author"),
-                        rs.getString("title")
+                        rs.getString("title"),
+                        rs.getString("categories") // Lägg till kategorin
                 ));
             }
         }
@@ -53,11 +57,14 @@ public class LoanDAO {
 
     public List<Loan> getAllActiveLoans() throws SQLException {
         List<Loan> loans = new ArrayList<>();
-        String sql = "SELECT loans.*, books.title, books.author, users.username " +
+        String sql = "SELECT loans.*, books.title, books.author, GROUP_CONCAT(categories.name SEPARATOR ', ') AS categories, users.username " +
                 "FROM loans " +
                 "JOIN books ON loans.book_id = books.id " +
                 "JOIN users ON loans.user_name = users.username " +
-                "WHERE return_date IS NULL";
+                "LEFT JOIN book_categories ON books.id = book_categories.book_id " +
+                "LEFT JOIN categories ON book_categories.category_id = categories.id " +
+                "WHERE return_date IS NULL " +
+                "GROUP BY loans.id";
 
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement();
@@ -70,7 +77,8 @@ public class LoanDAO {
                         rs.getDate("loan_date").toLocalDate(),
                         null,
                         rs.getString("author"),
-                        rs.getString("title")
+                        rs.getString("title"),
+                        rs.getString("categories") // Lägg till kategorin
                 ));
             }
         }

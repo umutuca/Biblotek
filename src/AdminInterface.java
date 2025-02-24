@@ -108,7 +108,8 @@ public class AdminInterface {
                 System.out.println("Låne-ID: " + loan.getId() +
                         ", Användare: " + loan.getUserName() +
                         ", Bok: " + loan.getBookTitle() + " av " + loan.getBookAuthor() +
-                        ", Lånedatum: " + loan.getLoanDate());
+                        ", Lånedatum: " + loan.getLoanDate() +
+                        ", Kategori: " + loan.getBookCategory());
             }
         } catch (SQLException e) {
             System.out.println("Databasfel: " + e.getMessage());

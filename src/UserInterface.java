@@ -93,7 +93,8 @@ public class UserInterface {
                 System.out.println("Låne-ID: " + loan.getId() +
                         ", Bok-ID: " + loan.getBookId() +
                         ", Författare: " + loan.getBookAuthor() +
-                        ", Bok-titel: " + loan.getBookTitle());
+                        ", Bok-titel: " + loan.getBookTitle() +
+                        ", Kategori: " + loan.getBookCategory());
             }
 
             System.out.print("Ange låne-ID att återlämna: ");
@@ -134,7 +135,8 @@ public class UserInterface {
                 System.out.println("Lånad: " + loan.getLoanDate() +
                         ", Bok-ID: " + loan.getBookId() +
                         ", Författare: " + loan.getBookAuthor() +
-                        ", Bok-titel: " + loan.getBookTitle());
+                        ", Bok-titel: " + loan.getBookTitle() +
+                        ", Kategori: " + loan.getBookCategory());
             }
         } catch (SQLException e) {
             System.out.println("Databasfel: " + e.getMessage());
