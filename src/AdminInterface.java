@@ -121,7 +121,7 @@ public class AdminInterface {
             System.out.println("\nAlla böcker:");
             for (Book book : books) {
                 System.out.println(book.getId() + ": " + book.getTitle() +
-                        " av " + book.getAuthor() +
+                        " av " + book.getAuthor() + "Kategori: " + book.getCategory() +
                         " - " + (book.isAvailable() ? "Tillgänglig" : "Utlånad"));
             }
         } catch (SQLException e) {

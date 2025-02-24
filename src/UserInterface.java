@@ -61,7 +61,7 @@ public class UserInterface {
             List<Book> books = bookDAO.getAllBooks();
             for (Book book : books) {
                 if (book.isAvailable()) {
-                    System.out.println(book.getId() + ": " + book.getTitle() + " av " + book.getAuthor());
+                    System.out.println(book.getId() + ": " + book.getTitle() + " av " + book.getAuthor() + "Kategori: " + book.getCategory());
                 }
             }
             System.out.print("Ange bok-ID att låna: ");
@@ -147,7 +147,7 @@ public class UserInterface {
             System.out.println("\nAlla böcker:");
             for (Book book : books) {
                 System.out.println(book.getId() + ": " + book.getTitle() +
-                        " av " + book.getAuthor() +
+                        " av " + book.getAuthor() + "Kategori: " + book.getCategory() +
                         " - " + (book.isAvailable() ? "Tillgänglig" : "Utlånad"));
             }
         } catch (SQLException e) {
